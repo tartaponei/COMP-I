@@ -1,6 +1,8 @@
 #LISTA DE MOTIVAÇÃO 4
 
 #1 - soma de a, b e c
+
+#solução com vetor
 def soma(num):
     soma = 0
     
@@ -19,36 +21,83 @@ for i in range(3):
 
 print("\na soma é:", soma(n))            
 
+#==--**--==#
 
+#solução sem vetor
+def soma(a, b, c):
+    
+    if(a == 13):
+        a, b, c = 0, 0, 0
+    elif(b == 13):
+        b, c = 0, 0
+    elif(c == 13):
+        c = 0
+    
+    return a + b + c
+
+#
+a = float(input("valor de a: "))
+b = float(input("valor de b: "))
+c = float(input("valor de c: "))
+
+print(soma(a, b, c))
+      
+  
 ######################################
 
 
-#2 - media
-import numpy
+#2 - alunos e médias
+n = int(input("número de alunos: "))
 
-#def
+nome = []
+p1 = []
+p2 = []
+media = []
+opt = 0
+r = 0
+soma = 0
 
-#
-n = int(input("numero de alunos: "))
-
-"""
-nome    pr1    pr2    opta(op)  media
-0 0     0 1    0 2     0 3       0 4
-1 0     1 1    1 2     1 3       1 4
-"""
-alunos = numpy.zeros(5, n)
-
-for i in range(n): #corre as linhas
-    print("ALUNO\n", i)
-    alunos[i, 0] = input("nome do aluno: ")
-    alunos[i, 1] = int(input("nota da pr1: "))
-    alunos[i, 2] = int(input("nota da pr2: "))
+for i in range(n):
+    print("\nALUNO ", i+1)
+    nome.append(input("\nnome do aluno: "))
+    p1.append(float(input("nota da pr1: ")))
+    p2.append(float(input("nota da pr2: ")))
     
     r = int(input("tem nota optativa? 1 pra sim e 0 pra não: "))
+    
     if(r == 1):
-        alunos[i, 3] = int(input("nota da optativa: "))
+        opt = float(input("nota da optativa: "))
+        
+        if(p1[i] < p2[i] and opt > p1[i]):
+            p1[i] = opt
+            
+        elif(p2[i] < p1[i] and opt > p2[i]):
+            p2[i] = opt
+            
+    media.append((p1[i] + p2[i])/2)
+            
+#média de cada aluno
+for i in range(n):
+    soma = soma + media[i]
+    
+    print("")
+    print(nome[i], "- MÉDIA: ", media[i], "\n")
+    
+#média da turma
+print("\na média da turma é: ", soma / n)
 
-print(alunos)
+#percentual de alunos aprovados e reprovados
+ap = 0
+rep = 0
+
+for i in range(n):
+    if(media[i] >= 5):
+        ap = ap + 1
+    else:
+        rep = rep + 1
+
+print("\npercentual de aprovados: ", (ap / n) * 100, "%")
+print("percentual de reprovados: ", (rep / n) * 100, "%")
     
 
 ###########################
