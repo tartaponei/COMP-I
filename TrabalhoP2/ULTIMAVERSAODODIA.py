@@ -4,7 +4,6 @@ Created on Fri Nov 15 21:16:48 2019
 
 @author: CASA
 """
-#teste
 
 import sqlite3
 import json
@@ -22,26 +21,36 @@ def cria_tabela():
         cadastra_elemento(elemento["name"], elemento["symbol"], elemento["category"], 0, elemento["electron_configuration"])
         conexao.commit()
         
-def aquitaos_elemento(sigla):
+def consulta_elemento(sigla):
     return leitor.execute("SELECT * FROM elementos where upper(sigla) = '"+ sigla + "'").fetchall()[0]
     
 
 print('Esse programa consiste em calcular a distancia entre as ligações do atomo central de uma molécula aos adjacentes')
 
-
-def comparar_elementos():
-    elemento1 = aquitaos_elemento(input('Digite um elemento').upper())
-    elemento2 = aquitaos_elemento(input('Digite outro elemento').upper())
+def comparar_elementos():   
+    elemento1 = consulta_elemento(input('Digite um elemento: ').upper())
+    elemento2 = consulta_elemento(input('Digite outro elemento: ').upper())
     if (elemento1[5] == "ametal" and elemento2[5] == "metal") or (elemento2[5] == "ametal" and elemento1[5] == "metal"):
         print('ligação ionica') 
-        return "ionica"
+        return {'tipo_ligacao': "ionica", 'n_eletrons1': conta_eletrons_ultima_camada(elemento1[4].split(" ")), 'n_eletrons2': conta_eletrons_ultima_camada(elemento2[4].split(" "))}
     elif (elemento1[5] == "gas nobre" or elemento2[5] == "gas nobre"): 
         print('Inválido. Gases nobres já são estaveis por isso nao se associam com outros elementos')
         comparar_elementos()
     elif (elemento1[5] == "ametal" and elemento2[5] =="ametal"):
         print('ligação covalente')
-        return "covalente"
-tipoligacao = comparar_elementos()
+        return {'tipo_ligacao': "covalente", 'n_eletrons1': conta_eletrons_ultima_camada(elemento1[4].split(" ")), 'n_eletrons2': conta_eletrons_ultima_camada(elemento2[4].split(" "))}
+
+def conta_eletrons_ultima_camada(distribuicao):
+    n_ultima_camada = distribuicao[len(distribuicao) - 1][0]
+    soma = 0
+    for camada in range(len(distribuicao) - 1, 0, -1):
+        if(distribuicao[camada][0] == n_ultima_camada):
+            soma += int(distribuicao[camada][2])
+    return soma  
+    
+resultado = comparar_elementos()
+print(resultado["tipo_ligacao"]) #valores = ["tipo_ligacao","n_eletrons1", "n_eletrons2"]
+
 #ta salvo na variavel ligação se é ionico ou covalente apartir dai segue:
 
 #comparação vai servir pra saber que tipo de comando deve ser escrito ou executado a seguir tipo:

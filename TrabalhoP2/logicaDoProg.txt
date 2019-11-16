@@ -1,0 +1,15 @@
+H - nox +1 (módulo = 1)
+O - nox -2 (módulo = 2)
+
+Al - nox +3 (módulo = 3)
+Cl - nox -1 (módulo = 1)
+
+soma_nox = nox_elemento1 + nox_elemento2 (1 - 2 = -1) // (3 - 1 = 2)
+
+while(soma_nox != 0):
+	if(modulo_nox1 < modulo_nox2): (1 < 2? sim) // (3 < 1? não)
+		numero_de_elemento1 = numero_de_elemento1 + 1 (2H, 1O)
+		soma_nox = soma_nox + nox1 (-1 + 1 = 0)
+	else:
+		numero_de_elemento2 = numero_de_elemento2 + 1 (1Al, 2Cl) // (1Al, 3Cl)
+		soma_nox = soma_nox + nox2 (2 - 1 = 1) // (1 - 1 = 0)
