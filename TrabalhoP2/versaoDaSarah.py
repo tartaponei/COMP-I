@@ -1,16 +1,14 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Nov 15 21:16:48 2019
-
-@author: CASA
-"""
-
 import sqlite3
 import json
 import math
 
 conexao = sqlite3.connect('elementos.db')
 leitor = conexao.cursor() #le e executar codigo
+
+def inv(n):
+    n[0] = -n[0]
+    return n
+
 
 def cadastra_elemento(nome, sigla, categoria, raio, configuracao_eletronica):
     leitor.execute("INSERT INTO elementos (nome, sigla, categoria, raio, configuracao_eletronica) VALUES(?,?,?,?,?)", (nome, sigla, categoria, raio, configuracao_eletronica))
@@ -34,14 +32,14 @@ def comparar_elementos(elemento1, elemento2):
     #elemento1 = consulta_elemento(input('Digite um elemento: ').upper())
     #elemento2 = consulta_elemento(input('Digite outro elemento: ').upper())
     if (elemento1[5] == "ametal" and elemento2[5] == "metal") or (elemento2[5] == "ametal" and elemento1[5] == "metal"):
-        print('ligação ionica') 
-        return {'tipo_ligacao': "ionica", 'n_eletrons1': conta_eletrons_ultima_camada(elemento1[4].split(" ")), 'n_eletrons2': conta_eletrons_ultima_camada(elemento2[4].split(" "))}
+        #print('Ligação iônica') 
+        return {'Tipo de Ligação': "Iônica", 'Valência 1° Elemento': conta_eletrons_ultima_camada(elemento1[4].split(" ")), 'Valência 2° Elemento': conta_eletrons_ultima_camada(elemento2[4].split(" "))}
     elif (elemento1[5] == "gas nobre" or elemento2[5] == "gas nobre"): 
         print('Inválido. Gases nobres já são estaveis por isso nao se associam com outros elementos')
         return comparar_elementos()
     elif (elemento1[5] == "ametal" and elemento2[5] =="ametal"):
-        print('ligação covalente')
-        return {'tipo_ligacao': "covalente", 'n_eletrons1': conta_eletrons_ultima_camada(elemento1[4].split(" ")), 'n_eletrons2': conta_eletrons_ultima_camada(elemento2[4].split(" "))}
+        #print('ligação covalente')
+        return {'Tipo de Ligação': "Covalente", 'Valência 1° Elemento': conta_eletrons_ultima_camada(elemento1[4].split(" ")), 'Valência 2° Elemento': conta_eletrons_ultima_camada(elemento2[4].split(" "))}
     elif (elemento1[5] == "lantanideos" or elemento2[5] == "lantanideos"):
         print('Inválido. Lantanideos não possuem raios atomicos constatados, isso se deve a natureza artificial dos mesmos. São instaveis. Existem por frações de segundos')
         return comparar_elementos()
@@ -85,7 +83,11 @@ def determinar_formula(elemento1, elemento2):
 
     print("Nox do(a)", elemento2[2], ":", nox2)
     
-    #dai ce vai ter q mudar tudo DKNASKDNASDKL pq tem mais de um nox boa parte dos elementos
+    if((nox1[0] > 0 and nox2[0] > 0) or (nox2[0] < 0 and nox1[0] < 0)): #se os nox tem mesmo sinal
+        if(nox1[0] > nox2[0] or nox1[0] == nox2[0]):
+            nox2 = inv(nox2)
+        else:
+            nox1 = inv(nox1)
     
     soma_nox = nox1[0] + nox2[0] #somo os nox dos elementos
     n_elemento1 = 1 #número de vezes que o elemento 1 se repete
@@ -100,7 +102,13 @@ def determinar_formula(elemento1, elemento2):
             n_elemento2 = n_elemento2 + 1 #somo mais um na quantidade de vezes que o elemento 2 se repete
             soma_nox = soma_nox + nox2[0] #calculo nova soma do nox
 
-    if(nox2[0] < 0): #se o nox do elemento2 for negativo
+    if(elemento1[2] == elemento2[2]):
+       menos_el = elemento1[2]
+       n_menos_el = str(2)
+
+       mais_el, n_mais_el = "", ""
+
+    elif(nox2[0] < 0): #se o nox do elemento2 for negativo
         mais_el = elemento2[2]
         n_mais_el = str(n_elemento2)
 
